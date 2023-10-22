@@ -2,5 +2,5 @@
 </script>
 
 <template>
-  <h1>You are in the home view</h1>
+  <h1>This is the navbar</h1>
 </template>
