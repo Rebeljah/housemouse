@@ -1,24 +1,24 @@
 <script setup lang="ts">
+import { ref, Ref } from 'vue'
+import NavBar from '../components/NavBar.vue'
+import AuthModal from '../components/AuthModal.vue'
 
-import { auth } from '../firebase'
+const showAuthModal: Ref<Boolean> = ref(false)
+const authModalMode: Ref<'login' | 'signup'> = ref('login')
 
-const userHomes: string[] = ["home 1", "home 2"];
+function displayAuthModal(mode: 'login' | 'signup') {
+  showAuthModal.value = true
+  authModalMode.value = mode
+}
 
 </script>
 
 <template>
-  <h1>You are in landing page view</h1>
-  <div v-if="auth.currentUser !== null">
-    <p>Select a home</p>
-    <ul>
-      <li v-for="home in userHomes">
-        {{ home }}
-      </li>
-    </ul>
-  </div>
-  <div v-else>
-    <router-link :to="{ name: 'login' }">sign in</router-link>
-    <br>
-    <router-link :to="{ name: 'signup' }">sign up</router-link>
+  <div>
+    <NavBar 
+      @click-login="displayAuthModal('login')" 
+      @click-signup="displayAuthModal('signup')"
+    />
+    <AuthModal v-if="showAuthModal" :mode="authModalMode" @close-modal="showAuthModal = false"/>
   </div>
 </template>

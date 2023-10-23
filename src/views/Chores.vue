@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import HomeNavBar from '../components/HomeNavBar.vue'
+import NavBar from '../components/NavBar.vue'
 </script>
 
 <template>
-  <HomeNavBar />
+  <NavBar />
   <h1>You are in the chores view</h1>
 </template>

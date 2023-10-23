@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
-export { app, auth, db }
+export { app, auth, db, logoutUser }
 
 const firebaseConfig = {
     apiKey: "AIzaSyAukOUS32AdMTC-biuUOmj1gpFB1gYI544",
@@ -17,3 +17,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const db = getFirestore(app)
+
+const logoutUser = function() {
+    auth.signOut()
+      .then(() => console.log("current user signed out"))
+}
