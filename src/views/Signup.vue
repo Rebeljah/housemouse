@@ -1,30 +1,29 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase'
 
 const email = ref('');
 const password = ref('');
 
-function login(){
-  console.log("logging in", email.value)
+function signUp(){
+  console.log("signing up", email.value)
 
-  signInWithEmailAndPassword(auth, email.value, password.value)
-    .then((userCredential) => {
-      console.log("user logged in", userCredential);
-    })
-    .catch((error) => {
-      console.log("error logging in", error.code, error.message)
-    });
-    
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+  .then((userCredential) => {
+    console.log("signed up user", userCredential)
+  })
+  .catch((error) => {
+    console.log(error.code, error.message)
+  });
+
   email.value = '';
   password.value = '';
 }
-
 </script>
 
 <template>
-  <p>login using your email and password</p>
+  <p>signup using your email and password</p>
   <form action="#" @submit.prevent="">
     <label for="emailInput">email</label>
     <input v-model="email" type="text" id="emailInput">
@@ -32,6 +31,6 @@ function login(){
     <label for="passwordInput">password</label>
     <input v-model="password" type="password" id="passwordInput">
     <br>
-    <button type="submit" @click="login">login</button>
+    <button type="submit" @click="signUp">sign up</button>
   </form>
 </template>
