@@ -2,16 +2,17 @@
 import { ref } from 'vue';
 
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'
+import { auth } from '../firebase/instances'
 
+// define props and emits
 const props = defineProps<{
   mode: "login" | "signup"
 }>()
 const emit = defineEmits(["close-modal"])
 
+// state
 const email = ref('');
 const password = ref('');
-
 
 function close() {
   email.value = '';
@@ -79,6 +80,5 @@ function login(){
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: cadetblue;
-  /* Other styles for your modal (e.g., width, height, background, etc.) */
 }
-</style>
+</style>../firebase/firebase../firebase/init

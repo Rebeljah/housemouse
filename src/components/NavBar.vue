@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { auth } from '../firebase/instances'
 import { ref } from 'vue'
-
-import { auth, logoutUser } from '../firebase'
 
 const emit = defineEmits(['click-login', 'click-signup'])
 
@@ -20,7 +19,7 @@ auth.onAuthStateChanged((user) => {
       <button @click="emit('click-signup')">Sign up</button>
     </div>
     <div v-else>
-      <button @click="logoutUser">Log out</button>
+      <button @click="auth.signOut">Log out</button>
     </div>
   </div>
 </template>
@@ -29,4 +28,4 @@ auth.onAuthStateChanged((user) => {
 #navbar {
   background-color: aquamarine;
 }
-</style>
+</style>../firebase/firebase../firebase/init
