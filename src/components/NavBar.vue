@@ -1,31 +1,35 @@
 <script setup lang="ts">
-import { auth } from '../firebase/instances'
-import { ref } from 'vue'
-
-const emit = defineEmits(['click-login', 'click-signup'])
-
-const userLoggedIn = ref(false)
-
-auth.onAuthStateChanged((user) => {
-  userLoggedIn.value = user !== null
-})
-
 </script>
 
 <template>
-  <div id="navbar">
-    <div v-if="!userLoggedIn">
-      <button @click="emit('click-login')">Log in</button>
-      <button @click="emit('click-signup')">Sign up</button>
-    </div>
-    <div v-else>
-      <button @click="auth.signOut">Log out</button>
-    </div>
+  <div class="nav-bar">
+    <router-link :to="{name: 'homePage'}">Home Page</router-link>
+    <router-link :to="{name: 'chores'}">Chores</router-link>
+    <router-link :to="{name: 'money'}">Money</router-link>
   </div>
 </template>
 
 <style scoped>
-#navbar {
-  background-color: aquamarine;
+.nav-bar {
+  background-color: #333; /* Background color for the sidebar */
+  color: #fff; /* Text color for links */
+  width: 200px; /* Set the width of the sidebar */
+  padding: 20px; /* Add some padding for spacing */
 }
-</style>../firebase/firebase../firebase/init
+
+.nav-bar a {
+  text-decoration: none;
+  color: #fff; /* Text color for links */
+  display: block; /* Display links as block elements for better spacing */
+  margin: 10px 0; /* Add margin to separate links */
+  font-size: 18px; /* Adjust the font size */
+}
+
+/* Style for the active link */
+.nav-bar a.router-link-exact-active {
+  font-weight: bold; /* Make the active link bold */
+  background-color: #555; /* Background color for the active link */
+  border-radius: 5px; /* Add rounded corners to the active link */
+  padding: 5px; /* Add padding to the active link */
+}
+</style>

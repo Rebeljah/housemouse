@@ -1,32 +1,39 @@
 import { initializeApp, FirebaseApp } from 'firebase/app'
-import { getAuth, Auth } from 'firebase/auth'
-import { getFirestore, Firestore } from 'firebase/firestore'
+import { getAuth, connectAuthEmulator, Auth } from 'firebase/auth'
+import { getFirestore, connectFirestoreEmulator, Firestore } from 'firebase/firestore'
+import { getFunctions, connectFunctionsEmulator, Functions } from "firebase/functions";
 
 export let app: FirebaseApp
 export let auth: Auth
 export let db: Firestore
-export let initialized = false;
+export let functions: Functions
+export let ready = false;
 
 /**
  * Initializes Firebase instances, including the Firebase app, authentication, and Firestore.
  */
 export function initFirebaseInstances() {
-    if (initialized) return
+    if (ready) return
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAukOUS32AdMTC-biuUOmj1gpFB1gYI544",
-        authDomain: "housemouse-ef143.firebaseapp.com",
-        projectId: "housemouse-ef143",
-        storageBucket: "housemouse-ef143.appspot.com",
-        messagingSenderId: "59902509704",
-        appId: "1:59902509704:web:9c30ca5d26d7b78f0b953d",
-        measurementId: "G-Q3PEPXKF4D"
-    }
-
+    // load appropriate config (prod or dev) from vite environment
+    const firebaseConfig = JSON.parse(import.meta.env.VITE_FIREBASE_APP_CONFIG_JSON)
     app = initializeApp(firebaseConfig)
     auth = getAuth(app)
     db = getFirestore(app)
-      
+    functions = getFunctions(app)
+    
+    // connect emulators if in dev (vite environment object)
+    if (import.meta.env.DEV) {
+        const emulatorHost = import.meta.env.VITE_FIREBASE_EMULATOR_HOST
+        const authPort = Number(import.meta.env.VITE_FIREBASE_AUTH_EMULATOR_PORT)
+        const firestorePort = Number(import.meta.env.VITE_FIREBASE_FIRESTORE_EMULATOR_PORT)
+        const functionsPort = Number(import.meta.env.VITE_FIREBASE_FUNCTIONS_EMULATOR_PORT)
+        connectAuthEmulator(auth, `http://${emulatorHost}:${authPort}`)
+        connectFirestoreEmulator(db, emulatorHost, firestorePort)
+        connectFunctionsEmulator(functions, emulatorHost, functionsPort)
+    }
+
+    ready = true;
     
     auth.onAuthStateChanged((user) => {
         if (!user) {
@@ -36,5 +43,4 @@ export function initFirebaseInstances() {
         }
     })
 
-    initialized = true;
 }
