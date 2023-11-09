@@ -2,8 +2,47 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+    function loggedIn() {
+        return request.auth != null;
+    }
+    function auth() {
+        return request.auth;
+    }
+    function affectsFields(keys) {
+        return request.resource.keys().hasAny(keys);
+    }
+
+    function getUser(userId) {
+        return get(/users/$(userId));
+    }
+
+    function getHome(homeId) {
+        return get(/homes/$(homeId));
+    }
+    function inHome(homeId) {
+        return loggedIn() && getUser(auth().uid).homeId == homeId && auth().uid in getHome(homeId).data.members;
+    }
+    function isHomeAdmin(homeId) {
+        return inHome(homeId) && getUser(auth().uid).data.isHomeAdmin;
+    }
+    
+    match /users/{userId} {
+      allow read:
+        if loggedIn() && auth().uid == userId;
+      allow update:
+        if loggedIn() && auth().uid == userId && !affectsFields(["homeId", "isHomeAdmin"]);
+    }
+
+
+    match /chores/{choreId} {
+        allow read: if inHome(resource.data.homeId);
+        allow write: if request.resource.data.homeId && inHome(request.resource.data.homeId);
+    }
+    match /invites/{homeId} {
+        allow read, update: if isHomeAdmin(homeId);
+    }
+    match /homes/{homeId} {
+        allow read, update: if inHome(homeId);
     }
   }
 }

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "emulators": "firebase emulators:start --import='./firebase_emulator_data' --export-on-exit='./firebase_emulator_data'"
   },
   "dependencies": {
     "firebase": "^10.5.0",

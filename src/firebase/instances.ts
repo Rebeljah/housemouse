@@ -11,6 +11,7 @@ export let ready = false;
 
 /**
  * Initializes Firebase instances, including the Firebase app, authentication, and Firestore.
+ * This function is idempotent.
  */
 export function initFirebaseInstances() {
     if (ready) return
@@ -34,13 +35,4 @@ export function initFirebaseInstances() {
     }
 
     ready = true;
-    
-    auth.onAuthStateChanged((user) => {
-        if (!user) {
-            console.log('current user logged out')
-        } else {
-            console.log('user logged in:', user)
-        }
-    })
-
 }

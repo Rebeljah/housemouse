@@ -6,3 +6,4 @@ import NavBar from './components/NavBar.vue'
   <NavBar v-show="$route.name != 'homePage'"/>
   <router-view></router-view>
 </template>
+./currentUser
