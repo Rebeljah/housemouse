@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '../../firebase/instances';
 
-const inviteCode = ref('')
 
-function submit() {
+const joinHomeWithInviteCode = httpsCallable(functions, 'joinHomeWithInviteCode')
+const inviteCode = ref('');
 
+async function onSubmit() {
+  if (!inviteCode.value) return;
+
+  try {
+    await joinHomeWithInviteCode({inviteCode: inviteCode.value});
+  } catch (e) {
+    console.error(e);
+  }
 }
 </script>
 
 <template>
-  <form @submit.prevent="submit">
+  <form @submit.prevent="onSubmit">
     <div class="container">
       <label for="inviteCode">Invite Code</label>
       <input v-models="inviteCode" type="text" id="inviteCode">
