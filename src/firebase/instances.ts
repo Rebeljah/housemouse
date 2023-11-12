@@ -1,7 +1,11 @@
-import { initializeApp, FirebaseApp } from 'firebase/app'
-import { getAuth, connectAuthEmulator, Auth } from 'firebase/auth'
-import { getFirestore, connectFirestoreEmulator, Firestore } from 'firebase/firestore'
-import { getFunctions, connectFunctionsEmulator, Functions } from "firebase/functions";
+import { initializeApp} from 'firebase/app'
+import { getAuth, connectAuthEmulator } from 'firebase/auth'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import type { Firestore } from 'firebase/firestore';
+import type { Functions } from 'firebase/functions';
+import type { Auth } from 'firebase/auth';
+import type { FirebaseApp } from 'firebase/app';
 
 export let app: FirebaseApp
 export let auth: Auth
@@ -13,7 +17,7 @@ export let ready = false;
  * Initializes Firebase instances, including the Firebase app, authentication, and Firestore.
  * This function is idempotent.
  */
-export function initFirebaseInstances() {
+export async function initFirebaseInstances() {
     if (ready) return
 
     // load appropriate config (prod or dev) from vite environment

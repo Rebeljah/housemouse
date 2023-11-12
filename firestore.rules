@@ -8,7 +8,16 @@ service cloud.firestore {
     function auth() {
         return request.auth;
     }
-    function affectsFields(keys) {
+    function uid() {
+        return auth().uid;
+    }
+    function reqSrc() {
+        return request.resource
+    }
+    function userIs(userId) {
+        return uid() == userId;
+    }
+    function affectsAny(keys) {
         return request.resource.keys().hasAny(keys);
     }
 
@@ -20,29 +29,32 @@ service cloud.firestore {
         return get(/homes/$(homeId));
     }
     function inHome(homeId) {
-        return loggedIn() && getUser(auth().uid).homeId == homeId && auth().uid in getHome(homeId).data.members;
+        return loggedIn() && getUser(uid()).data.homeId == homeId && uid() in getHome(homeId).data.members;
     }
     function isHomeAdmin(homeId) {
-        return inHome(homeId) && getUser(auth().uid).data.isHomeAdmin;
+        return inHome(homeId) && getUser(uid()).data.isHomeAdmin;
+    }
+    function inSameHome(user1, user2) {
+        return user1.data.homeId == user2.data.homeId;
     }
     
     match /users/{userId} {
       allow read:
-        if loggedIn() && auth().uid == userId;
+        if loggedIn() && (userIs(userId) || inSameHome(resource, getUser(uid())));
       allow update:
-        if loggedIn() && auth().uid == userId && !affectsFields(["homeId", "isHomeAdmin"]);
+        if loggedIn() && userIs(userId) && !affectsAny(["homeId", "isHomeAdmin"]);
     }
-
 
     match /chores/{choreId} {
         allow read: if inHome(resource.data.homeId);
-        allow write: if request.resource.data.homeId && inHome(request.resource.data.homeId);
+        allow write: if reqSrc().data.homeId && inHome(reqSrc().data.homeId);
     }
     match /invites/{homeId} {
-        allow read, update: if isHomeAdmin(homeId);
+        allow read: if isHomeAdmin(homeId);
     }
     match /homes/{homeId} {
-        allow read, update: if inHome(homeId);
+        allow read: if inHome(homeId);
+        allow update: if isHomeAdmin(homeId)
     }
   }
 }

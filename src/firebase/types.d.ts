@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore"
 
-export type { FirebaseData, Chore, Home, User }
+export type { Chore, Home, User, FirestoreType }
 
 
 type HomeId = string
@@ -8,6 +8,7 @@ type UserId = string
 type ChoreId = string
 type Days = number
 type InviteId = string
+type FirestoreType = Chore | Home | Invite | User;
 
 
 interface Chore {
