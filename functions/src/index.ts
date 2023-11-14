@@ -135,7 +135,7 @@ export const addUserToFirestore = beforeUserCreated(async (authEvent) => {
     };
 
     try {
-        userDoc.create(userData);
+        await userDoc.create(userData);
     } catch (e) {  // stop account creation entirely
         throw new HttpsError('aborted', 'could not create new user');
     }
