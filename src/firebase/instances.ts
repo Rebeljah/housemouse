@@ -17,7 +17,7 @@ export let ready = false;
  * Initializes Firebase instances, including the Firebase app, authentication, and Firestore.
  * This function is idempotent.
  */
-export async function initFirebaseInstances() {
+export function initFirebaseInstances() {
     if (ready) return
 
     // load appropriate config (prod or dev) from vite environment

@@ -11,7 +11,7 @@ async function onSubmit() {
   if (!homeName.value) return;
 
   try {
-    await createNewHome(homeName.value);
+    await createNewHome({name: homeName.value});
   } catch (e) {
     console.error(e);
   }
@@ -23,7 +23,7 @@ async function onSubmit() {
   <div class="container">
     <form @submit.prevent="onSubmit">
       <label for="homeName">Home name</label>
-      <input v-models="homeName" type="text" id="homeName">
+      <input v-model="homeName" type="text" id="homeName">
       <button type="submit">Create</button>
     </form>
   </div>

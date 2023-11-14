@@ -5,10 +5,13 @@
 import { initializeApp } from "firebase-admin";
 import { DocumentData, DocumentReference, FieldValue, getFirestore } from "firebase-admin/firestore";
 import { onCall, HttpsError, CallableRequest } from "firebase-functions/v2/https";
+import { beforeUserCreated } from "firebase-functions/v2/identity";
+
+let APP = null;
 
 function adminInstances() {
-    const app = initializeApp({projectId: process.env.PROJECT_ID});
-    return { firestore: getFirestore(app) }
+    APP ??= initializeApp({projectId: process.env.PROJECT_ID});
+    return { firestore: getFirestore(APP) }
 }
 
 function isLoggedIn(request: CallableRequest): boolean {
@@ -60,7 +63,7 @@ export const createNewHome = onCall(async (request) => {
     });
 
     // add requesting user to home
-    await addUserToHome(homeDocRef, userDocRef, true);
+    await addUserToHome(userDocRef, homeDocRef, true);
 
     return homeDocRef.id;
 });
@@ -119,4 +122,21 @@ export const removeMemberFromHome = onCall(async (req) => {
     const homeRef = firestore.doc('/homes/' + homeId);
     const userRemoveRef = firestore.doc('/users/'+uidRemove);
     await removeUserFromHome(userRemoveRef, homeRef);
+});
+
+export const addUserToFirestore = beforeUserCreated(async (authEvent) => {
+    const { firestore } = adminInstances();
+
+    const userDoc = firestore.doc('/users/' + authEvent.data.uid);
+    const userData = {
+        email: authEvent.data.email,
+        homeId: '',
+        isHomeAdmin: false,
+    };
+
+    try {
+        userDoc.create(userData);
+    } catch (e) {  // stop account creation entirely
+        throw new HttpsError('aborted', 'could not create new user');
+    }
 });

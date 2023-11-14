@@ -35,9 +35,10 @@ async function submit() {
       case 'auth/email-already-in-use': errorEmailInUse.value = true; break;
       case 'auth/invalid-email': errorInvalidEmail.value = true; break;
       case 'auth/weak-password': errorWeakPassword.value = true; break;
-      default: errorCouldNotSignup.value = true; throw e;
+      default: errorCouldNotSignup.value = true;
     }
   };
+
 }
 
 </script>
@@ -52,6 +53,10 @@ async function submit() {
       <label for="passwordConfirmation">Confirm password</label>
       <input v-model="passwordConfirmation" type="password" id="passwordConfirmation">
       <button type="submit">Create account</button>
+      <p v-if="errorEmailInUse">Email already in use.</p>
+      <p v-else-if="errorInvalidEmail">Invalid email</p>
+      <p v-else-if="errorWeakPassword">Password too weak</p>
+      <p v-else-if="errorCouldNotSignup">An error occurred, try again.</p>
     </div>
   </form>
 </template>

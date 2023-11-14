@@ -35,7 +35,7 @@ interface Invite {
 
 
 interface User {
-    name: string
+    email: string
     homeId: string
-    isHomeAdmin: string
+    isHomeAdmin: boolean
 }

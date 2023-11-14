@@ -5,7 +5,9 @@ import SignInForm from '../components/SignInForm.vue';
 import JoinHomeForm from '../components/JoinHomeForm.vue'
 import CreateHomeForm from '../components/CreateHomeForm.vue'
 
+import { user, home } from '../store';
 // define tabs for tabbed form component
+
 const authTabs = [
   { title: 'Log in', tabComponent: SignInForm },
   { title: 'Create account', tabComponent: SignUpForm },
@@ -22,8 +24,9 @@ const chooseHomeTabs = [
       <h1>House Mouse</h1>
       <img src="banner_logo.png" class="banner-logo">
     </div>
-    <TabbedForm v-if="uiMode === 'auth'" :tabs="authTabs" />
-    <TabbedForm v-else :tabs="chooseHomeTabs"/>
+    <TabbedForm v-if="!user.model" :tabs="authTabs" />
+    <TabbedForm v-else-if="!home.model" :tabs="chooseHomeTabs"/>
+    <button v-else @click="$router.push({name: 'chores'})">Go to {{ home.model!.name }}</button>
   </div>
 </template>
 

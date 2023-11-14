@@ -23,9 +23,11 @@ async function submit() {
     switch (e.code) {
       case 'auth/invalid-email': errorInvalidEmail.value = true; break;
       case 'auth/wrong-password': errorWrongPassword.value = true; break;
-      default: errorCouldNotSignin.value = true; throw e;
+      default: errorCouldNotSignin.value = true; break;
     }
   }
+
+  
 }
 
 </script>
@@ -37,6 +39,9 @@ async function submit() {
       <input v-model="email" type="text" id="email">
       <label for="password">Password</label>
       <input v-model="password" type="password" id="password">
+      <p v-if="errorInvalidEmail">Invalid email.</p>
+      <p v-else-if="errorWrongPassword">Wrong password.</p>
+      <p v-else-if="errorCouldNotSignin">An error occurred, try again.</p>
       <button type="submit">Login</button>
     </div>
   </form>

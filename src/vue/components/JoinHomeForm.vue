@@ -22,7 +22,7 @@ async function onSubmit() {
   <form @submit.prevent="onSubmit">
     <div class="container">
       <label for="inviteCode">Invite Code</label>
-      <input v-models="inviteCode" type="text" id="inviteCode">
+      <input v-model="inviteCode" type="text" id="inviteCode">
       <button type="submit">Join</button>
     </div>
   </form>
